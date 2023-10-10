@@ -3,17 +3,18 @@ package signals;
 import java.util.HashSet;
 
 public final class Signal0 {
-	private final HashSet<Runnable> runnables = new HashSet<>();
+	private final HashSet<Runnable> listeners = new HashSet<>();
 
-	public void connect(Runnable r) {
-		runnables.add(r);
-	}
-
-	public void disconnect(Runnable r) {
-		runnables.remove(r);
-	}
+	public void addListener(Runnable listener) { listeners.add(listener); }
+	public void removeListener(Runnable listener) { listeners.remove(listener); }
+	public void clearListeners() { listeners.clear(); }
 
 	public void emit() {
-		runnables.forEach(Runnable::run);
+		listeners.forEach(Runnable::run);
+		synchronized (this) { notify(); }
+	}
+
+	public void await() throws InterruptedException {
+		synchronized (this) { wait(); }
 	}
 }
