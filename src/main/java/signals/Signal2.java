@@ -5,12 +5,12 @@ import java.util.function.BiConsumer;
 
 public class Signal2<T, U> {
 	public final class Pair {
-		public final T t;
-		public final U u;
+		public final T first;
+		public final U second;
 
 		private Pair(T t, U u) {
-			this.t = t;
-			this.u = u;
+			this.first = t;
+			this.second = u;
 		}
 	}
 
