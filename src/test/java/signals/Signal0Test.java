@@ -30,11 +30,12 @@ final class Signal0Test {
 	public static void main(String[] args) {
 		msgReceived.addListener(() -> System.out.println("addListener received a message"));
 		Thread.ofVirtual().start(Signal0Test::awaitThread);
-
+		System.out.println("Press Ctrl+D to stop the test");
 		final var console = System.console();
 		while (console.readLine() != null) {
 			msgReceived.emit();
 		}
+		System.out.println("Test passed");
 	}
 
 	private Signal0Test() {

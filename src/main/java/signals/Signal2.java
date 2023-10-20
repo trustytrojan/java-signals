@@ -4,33 +4,33 @@ import java.util.HashSet;
 import java.util.function.BiConsumer;
 
 public class Signal2<T, U> {
-	public final class Pair {
+	public final class Values {
 		public final T first;
 		public final U second;
 
-		private Pair(T t, U u) {
+		private Values(final T t, final U u) {
 			this.first = t;
 			this.second = u;
 		}
 	}
 
 	private final HashSet<BiConsumer<T, U>> listeners = new HashSet<>();
-	private Pair awaitedPair;
+	private Values awaitedValues;
 
-	public void addListener(BiConsumer<T, U> listener) { listeners.add(listener); }
-	public void removeListener(BiConsumer<T, U> listener) { listeners.remove(listener); }
+	public void addListener(final BiConsumer<T, U> listener) { listeners.add(listener); }
+	public void removeListener(final BiConsumer<T, U> listener) { listeners.remove(listener); }
 	public void clearListeners() { listeners.clear(); }
 
-	public void emit(T t, U u) {
+	public void emit(final T t, final U u) {
 		listeners.forEach(listener -> listener.accept(t, u));
 		synchronized (this) {
-			awaitedPair = new Pair(t, u);
+			awaitedValues = new Values(t, u);
 			notify();
 		}
 	}
 
-	public Pair await() throws InterruptedException {
+	public Values await() throws InterruptedException {
 		synchronized (this) { wait(); }
-		return awaitedPair;
+		return awaitedValues;
 	}
 }
